@@ -9,22 +9,31 @@ app.config["MONGO_URI"]="mongodb://localhost:27017/BankDatabase"
 mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 
+@app.route("/login/<accountid>/<password>")
+def Login(accountid,password):
+    account_info1 = mongo.db.users.find({"AccountID": accountid1})
+    password_hash = account_info1['password']
+    if bcrypt.check_password_hash(password_hash, password):
+        return "Valid Credentials"
+    else:
+        return "Invalid Credentials"
+
 @app.route("/getInfo/<accountnum>")
-def TransactionSummary():
+def TransactionSummary(accountname):
     account_info = mongo.db.users.find({"AccountID": accountnum})
     amount = account_info['Balance']
     return str(amount)
     
-@app.route("/addBeneficiary/<accountid>/<accountname>/<balance>")
-def AddBeneficiary():
+@app.route("/addBeneficiary/<accountid>/<customername>/<balance>")
+def AddBeneficiary(accountid,customername,balance):
     try:
-        account_info = mongo.db.users.insert({"AccountID": accountid,"AccountName":accountname,"Balance":balance})
+        account_info = mongo.db.users.insert({"AccountID": accountid,"CustomerName":accountname,"Balance":balance})
         return "Beneficiary Added"
     except Exception as e:
         return "Unable to Add Beneficiary"
         
 @app.route("/deleteBeneficiary/<accountid>")
-def DeleteBeneficiary():
+def DeleteBeneficiary(accountid):
     try:
         account_info = mongo.db.users.remove({"AccountID": accountid})
         return "Account deleted"
@@ -32,7 +41,7 @@ def DeleteBeneficiary():
         return "Unable to Delete the account"
         
 @app.route("/transferFunds/<accountid1>/<accountid2>/<amount>")
-def TransferFunds():
+def TransferFunds(accountid1,accountid2,amount):
     try:
         account_info1 = mongo.db.users.find({"AccountID": accountid1})
         account_info1 = mongo.db.users.find({"AccountID": accountid2})
@@ -49,10 +58,10 @@ def TransferFunds():
     except:
         return "Unable to fetch Account Details"
         
-@app.route("/futureAmount/<accountid>/<date>")
-def FutureAmount():
+@app.route("/futureAmount/<accountid>/<futuredate>")
+def FutureAmount(accountid,futuredate):
     currentdate = datetime.date.today()
-    delta = currentdate - date
+    delta = currentdate - futuredate
     noOfDays = delta.days
     account_info = mongo.db.users.find({"AccountID": accountid})
     balance = account_info['Balance']
@@ -60,14 +69,6 @@ def FutureAmount():
     total_amount = balance+intrest
     return str(total_amount)
     
-@app.route("/login/<accountid>/<password>")
-def Login():
-    account_info1 = mongo.db.users.find({"AccountID": accountid1})
-    password_hash = account_info1['password']
-    if bcrypt.check_password_hash(password_hash, password):
-        return "Valid Credentials"
-    else:
-        return "Invalid Credentials"
 
     
 
