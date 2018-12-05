@@ -6,7 +6,7 @@ RUN apk add --update python py-pip
 RUN pip install Flask
 RUN pip install flask_pymongo
 RUN pip install datetime
-RUN pip install https://github.com/reaperhulk/bcrypt/archive/fix-alpine.zip
+docker run -t -i --rm -v $(pwd):/app -w /app node:slim sh -c 'apt-get update && apt-get install -y build-essential && apt-get install -y python && npm install'
 
 COPY BankAPI.py /src/simpleapp.py
 
