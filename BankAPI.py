@@ -10,6 +10,10 @@ app.config["MONGO_URI"]="mongodb://localhost:27017/BankDatabase"
 mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 
+@app.route("/")
+def hello():
+    return "Welcome to BankService API"
+
 @app.route("/login/<accountid>/<password>")
 def login(accountid,password):
     try:
@@ -35,18 +39,19 @@ def getBalance(accountid):
         if account_info.count() > 0:
             for record in account_info:
                 amount = record['Balance']
-                return "Available Balance of Account Number "+str(accountid)+" is Rs "+str(amount)
+                return "Current Balance of Account Number "+str(accountid)+" is Rs "+str(amount)
         else:
             return "Customer Information doesnot exist"
     except Exception as e:
         return "Unable to Fetch Details",e
     
-@app.route("/addBeneficiary/<accountid>/<customername>/<balance>")
+@app.route("/addBeneficiary/<accountid>/<customername>/<password>/<balance>")
 def addBeneficiary(accountid,customername,balance):
     try:
         accountid = int(accountid)
         balance = int(balance)
-        account_info = mongo.db.users.insert({"AccountID": accountid,"CustomerName":customername,"Balance":balance})
+        password = bcrypt.generate_password_hash(password)
+        account_info = mongo.db.users.insert({"AccountID": accountid,"CustomerName":customername,"Balance":balance,"Password":password})
         return "Beneficiary Added: "+str(customername)
     except Exception as e:
         return "Unable to Add Beneficiary"
@@ -110,6 +115,9 @@ def futureAmount(accountid,day,month,year):
             "Customer Information doesnot exist"
     except Exception as e:
         return "Unable to fetch Details",e
+        
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=7000, debug=False)
     
 
     
