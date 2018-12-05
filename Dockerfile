@@ -6,6 +6,7 @@ RUN apk add --update python py-pip
 RUN pip install Flask
 RUN pip install flask_pymongo
 RUN pip install datetime
+RUN sudo apt-get install python-dev
 RUN pip install python-bcrypt
 
 
