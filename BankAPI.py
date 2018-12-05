@@ -2,27 +2,30 @@ import flask
 from flask import Flask
 from flask_pymongo import PyMongo
 from datetime import date
-#from flask.ext.bcrypt import Bcrypt
-#import Bcrypt
+from flask_bcrypt import Bcrypt
+
 
 app = Flask(__name__)
 app.config["MONGO_URI"]="mongodb://localhost:27017/BankDatabase"
 mongo = PyMongo(app)
-#bcrypt = Bcrypt(app)
+bcrypt = Bcrypt(app)
 
-"""
 @app.route("/login/<accountid>/<password>")
 def login(accountid,password):
     try:
-        account_info1 = mongo.db.users.find({"AccountID": accountid})
-        password_hash = account_info1['password']
-        if bcrypt.check_password_hash(password_hash, password):
-            return "Valid Credentials"
+        accountid = int(accountid)
+        account_info = mongo.db.users.find({"AccountID": accountid})
+        if account_info.count()>0:
+            for record in account_info:
+                password_hash = record['Password']
+                if bcrypt.check_password_hash(password_hash, password):
+                    return "Valid Credentials"
+                else:
+                    return "Invalid Credentials"
         else:
-            return "Invalid Credentials"
-    except:
-        return "Unable to Fetch Details"
-"""
+            return "Customer Information doesnot exist"
+    except Exception as e:
+        return "Unable to Fetch Details",e
 
 @app.route("/getbalance/<accountid>")
 def getBalance(accountid):
