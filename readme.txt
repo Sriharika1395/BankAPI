@@ -9,6 +9,11 @@ Balance:
 
 API:
 
+Login:
+FunctionName: Login
+Input: AccountNumber, Password
+The password entered is compared with the password which is stored in mongodb as an encrypted string.Returns valid if matches else invalid.
+
 GetBalanceInformation:
 FunctionName : getBalance
 Input : Account ID
