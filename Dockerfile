@@ -6,7 +6,7 @@ RUN apk add --update python py-pip
 RUN pip install Flask
 RUN pip install flask_pymongo
 RUN pip install datetime
-RUN pip install flask-bcrypt
+RUN pip install https://github.com/reaperhulk/bcrypt/archive/fix-alpine.zip
 
 COPY BankAPI.py /src/simpleapp.py
 
