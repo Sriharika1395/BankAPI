@@ -3,8 +3,7 @@ FROM alpine:3.1
 RUN apk add --update python py-pip
 
 # Install app dependencies
-RUN apt-get install build-essential
-RUN apt-get install python-devel
+RUN sudo apt-get install python-dev
 RUN pip install Flask
 RUN pip install flask_pymongo
 RUN pip install datetime
