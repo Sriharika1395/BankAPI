@@ -20,7 +20,8 @@ Input : Account ID
 
 AddBeneficiary:
 FunctionName : addBeneficiary
-Input : AccountID, Customer Name, Balance
+Input : AccountID, Customer Name,Password, Balance,
+Password is stored in an encrypted format.
 
 DeleteBeneficiary:
 FunctionName : deleteBeneficiary
