@@ -1,13 +1,17 @@
+import os
 import flask
 from flask import Flask
 from flask_pymongo import PyMongo
 from datetime import date
+from pymongo import MongoClient
 from flask_bcrypt import Bcrypt
 
 
 app = Flask(__name__)
-app.config["MONGO_URI"]="mongodb://localhost:27017/BankDatabase"
-mongo = PyMongo(app)
+client = MongoClient(os.environ['DB_PORT_27017_TCP_ADDR'],27017)
+db = client.BankDatabase
+#app.config["MONGO_URI"]="mongodb://localhost:27017/BankDatabase"
+#mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 
 @app.route("/")
@@ -46,7 +50,7 @@ def getBalance(accountid):
         return "Unable to Fetch Details",e
     
 @app.route("/addBeneficiary/<accountid>/<customername>/<password>/<balance>")
-def addBeneficiary(accountid,customername,balance):
+def addBeneficiary(accountid,customername,password,balance):
     try:
         accountid = int(accountid)
         balance = int(balance)
@@ -54,7 +58,7 @@ def addBeneficiary(accountid,customername,balance):
         account_info = mongo.db.users.insert({"AccountID": accountid,"CustomerName":customername,"Balance":balance,"Password":password})
         return "Beneficiary Added: "+str(customername)
     except Exception as e:
-        return "Unable to Add Beneficiary"
+        return "Unable to Add Beneficiary",e
         
 @app.route("/deleteBeneficiary/<accountid>")
 def deleteBeneficiary(accountid):
@@ -67,7 +71,7 @@ def deleteBeneficiary(accountid):
         else:
             return "Customer Information doesnot exist"
     except Exception as e:
-        return "Unable to Delete the account"
+        return "Unable to Delete the account",e
      
 @app.route("/transferFunds/<accountid1>/<accountid2>/<amount>")
 def transferFunds(accountid1,accountid2,amount):
@@ -90,8 +94,8 @@ def transferFunds(accountid1,accountid2,amount):
                 mongo.db.users.update({'AccountID': accountid1}, {'$set': {"Balance": balance1}}, multi=True)
                 mongo.db.users.update({'AccountID': accountid2}, {'$set': {"Balance": balance2}}, multi=True)
                 return "Transferred Funds"
-    except:
-        return "Unable to fetch  Details"
+    except Exception as e:
+        return "Unable to fetch  Details",e
         
 @app.route("/futureAmount/<accountid>/<day>/<month>/<year>")
 def futureAmount(accountid,day,month,year):
