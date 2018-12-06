@@ -1,4 +1,4 @@
-FROM alpine:3.1
+FROM centos:7
 
 RUN apk add --update python py-pip
 
