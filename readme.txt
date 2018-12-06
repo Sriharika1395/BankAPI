@@ -1,11 +1,17 @@
-Database name : BankDatabase
-Bank Database fields :
+									
+BANK API
+———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————-
+
+Database name : BankDatabase , Collection name :users
+BankDatabase fields :
 {
 AccountID:
 Password:
 CustomerName:
 Balance:
 }
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————-
 
 API:
 
@@ -36,5 +42,13 @@ Balance in Future:
 FunctionName : futureAmount
 Input : AccountID , Date for which balance with interest has to be calculated(DD/MM/YYYY)
 Calculates the number of days between the current date and given date.Interest is calculated using the formula P*T*R/(100*365) and the balance amount is returned.
+
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————-
+
+
+
+
+
 
 
